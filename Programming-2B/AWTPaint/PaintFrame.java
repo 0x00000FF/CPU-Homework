@@ -65,7 +65,8 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 			new CheckboxMenuItem("빨강"),
 			new CheckboxMenuItem("초록"),
 			new CheckboxMenuItem("파랑"),
-			new CheckboxMenuItem("노랑")
+			new CheckboxMenuItem("노랑"),
+			new CheckboxMenuItem("흰색")
 	};
 	
 	private int x, y, x1, y1, stroke = 1, dist = 1;
@@ -284,6 +285,9 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 					case "노랑":
 						color = Color.YELLOW;
 						break;
+					case "흰색":
+						color = Color.WHITE;
+						break;
 					default:
 						color = Color.BLACK;
 						break;
@@ -307,15 +311,16 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 			
 		case "thicker":
 			stroke++;
-			currentThickness.setLabel("현재 굵기 : " + stroke);
+			
 			break;
 			
 		case "thiner":
 			stroke--;
-			currentThickness.setLabel("현재 굵기 : " + stroke);
 			break;
 		}
 		
+		if (stroke < 1) stroke = 1;
+		currentThickness.setLabel("현재 굵기 : " + stroke);
 		this.repaint();
 	}
 		
