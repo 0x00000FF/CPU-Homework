@@ -55,8 +55,8 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 	
 	private Menu lineThicknessOptions = new Menu("선 굵기");
 	private MenuItem currentThickness = new MenuItem("굵기 : 1");
-	private MenuItem thicker = new MenuItem("굵게 (+1)");
-	private MenuItem thiner = new MenuItem("얇게 (-1)");
+	private MenuItem thicker = new MenuItem("+1");
+	private MenuItem thiner = new MenuItem("-1");
 	
 	
 	private Menu lineColor = new Menu("선 색상");
@@ -72,6 +72,8 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 	private Color color = Color.black;
 	
 	public Vector<Draw> vc = new Vector<Draw>();
+
+	
 	
 	public PaintFrame() {
 		this.initializeMenu();
@@ -105,9 +107,14 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 		
 		mb.add(fileTools);
 		fileTools.add(reset);
+		reset.setActionCommand("resetDrawing");
+		reset.addActionListener(this);
+		
 		fileTools.add(open);
 		fileTools.add(save);
 		fileTools.add(terminate);
+		terminate.setActionCommand("terminate");
+		terminate.addActionListener(this);
 		
 		mb.add(drawTools);
 		for (CheckboxMenuItem mi : drawToolsSub) {
@@ -118,8 +125,11 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 		mb.add(lineThicknessOptions);
 		lineThicknessOptions.add(currentThickness);
 		lineThicknessOptions.add(thicker);
+		thicker.setActionCommand("thicker");
 		thicker.addActionListener(this);
+		
 		lineThicknessOptions.add(thiner);
+		thiner.setActionCommand("thiner");
 		thiner.addActionListener(this);
 		
 		mb.add(lineColor);
@@ -127,19 +137,21 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 			lineColor.add(mi);
 			mi.addItemListener(this);
 		}
+		
+		
 	}
 
 	@Override
 	public void paint(Graphics g) {
+		
+		
 		   for (Draw d : vc) {
 			   Graphics2D g2 = (Graphics2D)g;
 			   
 			   g2.setColor(d.getColor());
 			   g2.setStroke(new BasicStroke(d.getStroke()));
 
-
-			   
-			   if(d.getDist() == 1) {
+			   if(d.getDist() <= 1) {
 				   g2.drawLine(d.getX(), d.getY(), d.getX1(), d.getY1());
 			   }
 	
@@ -161,24 +173,23 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 		
 		this.repaint();
 		
-		for (CheckboxMenuItem cmi : drawToolsSub) {
-			if (cmi.getState()) {
-				Draw d = new Draw();
-				d.setColor(color);
-				d.setDist(dist);
-				d.setStroke(stroke);
-					
-				d.setX(x);
-				d.setY(y);
+
+		if (drawToolsSub[0].getState()) {
+			Draw d = new Draw();
+			d.setColor(color);
+			d.setDist(dist);
+			d.setStroke(stroke);
+				
+			d.setX(x);
+			d.setY(y);
 	
-				d.setX1(x1);
-				d.setY1(y1);
+			d.setX1(x1);
+			d.setY1(y1);
 	
-				vc.add(d);
-	
-				x = x1;
-				y = y1;
-			}
+			vc.add(d);
+			
+			x = x1;
+			y = y1;
 		}
 
 	}
@@ -190,22 +201,13 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-
-		
-	}
+	public void mouseClicked(MouseEvent e) { }
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-
-		
-	}
+	public void mouseEntered(MouseEvent e) { }
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-
-		
-	}
+	public void mouseExited(MouseEvent e) { }
 
 	@Override
 	public void mousePressed(MouseEvent e) {
@@ -215,8 +217,25 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-
+		x1 = e.getX();
+		y1 = e.getY();
 		
+		this.repaint();
+		
+		if(!drawToolsSub[0].getState()) {  
+		   Draw d = new Draw();
+
+		   d.setDist(dist); 
+		   d.setColor(color);
+		   d.setStroke(stroke); 
+
+		   d.setX(x);  
+		   d.setY(y);
+		   d.setX1(x1);
+		   d.setY1(y1);
+
+		   vc.add(d);
+		  }
 	}
 
 	@Override
@@ -232,13 +251,13 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 					dist = 0;
 					break;
 				case "선":
-					dist = 2;
+					dist = 1;
 					break;
 				case "타원":
-					dist = 3;
+					dist = 2;
 					break;
 				case "직사각형":
-					dist = 4;
+					dist = 3;
 					break;
 				}
 				item.setState(true);
@@ -254,19 +273,20 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 				
 				switch(item.getLabel()) {
 					case "빨강":
-						color = Color.red;
+						color = Color.RED;
 						break;
 					case "파랑":
-						color = Color.blue;
+						color = Color.BLUE;
 						break;
 					case "초록":
-						color = Color.green;
-						break;
-					case "검정":
-						color = Color.black;
+						color = Color.GREEN;
 						break;
 					case "노랑":
-						color = Color.yellow;
+						color = Color.YELLOW;
+						break;
+					default:
+						color = Color.BLACK;
+						break;
 				}
 				item.setState(true);
 				return;
@@ -276,8 +296,27 @@ class PaintFrame extends Frame implements ActionListener, ItemListener, MouseLis
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		switch (e.getActionCommand()) {
+		case "resetDrawings":
+			vc.clear();
+			break;
+			
+		case "terminate":
+			System.exit(0);
+			break;
+			
+		case "thicker":
+			stroke++;
+			currentThickness.setLabel("현재 굵기 : " + stroke);
+			break;
+			
+		case "thiner":
+			stroke--;
+			currentThickness.setLabel("현재 굵기 : " + stroke);
+			break;
+		}
 		
-		
+		this.repaint();
 	}
 		
 }
