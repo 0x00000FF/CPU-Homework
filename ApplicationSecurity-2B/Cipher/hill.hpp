@@ -6,70 +6,70 @@
  */
 
 namespace Hill {
-	using i32 = int;
-	using u32 = unsigned;
+    using i32 = int;
+    using u32 = unsigned;
 
-	inline void SWAP(i32* a, i32* b) {
-		i32 tmp = *a;
-		*a = *b;
-		*b = tmp;
-	}
+    inline void SWAP(i32* a, i32* b) {
+        i32 tmp = *a;
+        *a = *b;
+        *b = tmp;
+    }
 
-	inline i32 ABS(const i32 x) {
-		return x < 0 ? x * -1 : x;
-	}
+    inline i32 ABS(const i32 x) {
+        return x < 0 ? x * -1 : x;
+    }
 
-	inline i32 MODULO(const i32 x, const i32 v) {
-		return x < 0 ? v - ABS(x) : x;
-	}
+    inline i32 MODULO(const i32 x, const i32 v) {
+        return x < 0 ? v - ABS(x) : x;
+    }
 
-	
-	i32 EUCLEDEAN_GCD(const i32 a, const i32 b) {
-		if (a % b == 0) return a;
-		return EUCLEDEAN_GCD(b, a % b);
-	}
+    
+    i32 EUCLEDEAN_GCD(const i32 a, const i32 b) {
+        if (a % b == 0) return a;
+        return EUCLEDEAN_GCD(b, a % b);
+    }
 
-	bool HILL_KEY_AVAILABLE(i32 const key[][2]) {
-		return key && 
-			ABS(
-				EUCLEDEAN_GCD(key[0][0] * key[1][1] - key[0][1] * key[1][0], 26)
-				)== 1;
-	}
+    bool HILL_KEY_AVAILABLE(i32 const key[][2]) {
+        return key && 
+            ABS(
+                EUCLEDEAN_GCD(key[0][0] * key[1][1] - key[0][1] * key[1][0], 26)
+                )== 1;
+    }
 
-	i32* HILL_ENCRYPT(i32 const plain[2], i32 const key[][2]) {
-		if (!plain && !HILL_KEY_AVAILABLE(key)) {
-			return NULL;
-		}
+    i32* HILL_ENCRYPT(i32 const plain[2], i32 const key[][2]) {
+        if (!plain && !HILL_KEY_AVAILABLE(key)) {
+            return NULL;
+        }
 
-		i32* result = new i32[2];
+        i32* result = new i32[2];
 
-		result[0] = ( key[0][0] * plain[0] + key[0][1] * plain[1] ) % 26;
-		result[1] = ( key[1][0] * plain[0] + key[1][1] * plain[1] ) % 26;
+        result[0] = ( key[0][0] * plain[0] + key[0][1] * plain[1] ) % 26;
+        result[1] = ( key[1][0] * plain[0] + key[1][1] * plain[1] ) % 26;
 
-		return result;
-	}
+        return result;
+    }
 
-	void HILL_DECRYPT(i32 cipher[2], i32 key[][2]) {
-		if (!cipher && !HILL_KEY_AVAILABLE(key)) {
-			return;
-		}
+    void HILL_DECRYPT(i32 cipher[2], i32 key[][2]) {
+        if (!cipher && !HILL_KEY_AVAILABLE(key)) {
+            return;
+        }
 
-		i32 a, b;
-		i32 pivot = ( key[0][0] * key[1][1] - key[0][1] * key[1][0] ) % 26;
-		i32 rev_key[][2] = {
-			{ key[0][0], key[0][1] },
-			{ key[1][0], key[1][1] }
-		};
+        i32 a, b;
+        i32 pivot = ( key[0][0] * key[1][1] - key[0][1] * key[1][0] ) % 26;
+        i32 rev_key[][2] = {
+            { key[0][0], key[0][1] },
+            { key[1][0], key[1][1] }
+        };
 
-		SWAP(&rev_key[0][0], &rev_key[1][1]);
-		rev_key[0][1] *= -1;
-		rev_key[1][0] *= -1;
+        SWAP(&rev_key[0][0], &rev_key[1][1]);
+        rev_key[0][1] *= -1;
+        rev_key[1][0] *= -1;
 
-		a = ( (cipher[0] * rev_key[0][0] + cipher[1] * rev_key[0][1]) / pivot ) % 26;
-		b = ( (cipher[0] * rev_key[1][0] + cipher[1] * rev_key[1][1]) / pivot ) % 26;
-		
-		cipher[0] = MODULO(a, 26);
-		cipher[1] = MODULO(b, 26);
-	}
+        a = ( (cipher[0] * rev_key[0][0] + cipher[1] * rev_key[0][1]) / pivot ) % 26;
+        b = ( (cipher[0] * rev_key[1][0] + cipher[1] * rev_key[1][1]) / pivot ) % 26;
+        
+        cipher[0] = MODULO(a, 26);
+        cipher[1] = MODULO(b, 26);
+    }
 }
 #endif
