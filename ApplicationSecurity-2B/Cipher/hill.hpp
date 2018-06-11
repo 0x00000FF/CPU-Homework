@@ -26,9 +26,9 @@ namespace Hill {
     
     i32 EUCLEDEAN_GCD(const i32 a, const i32 b) {
         if (b == 0) 
-			return a;
+            return a;
         
-		return EUCLEDEAN_GCD(b, a % b);
+        return EUCLEDEAN_GCD(b, a % b);
     }
 
     bool HILL_KEY_AVAILABLE(i32 const key[][2]) {
