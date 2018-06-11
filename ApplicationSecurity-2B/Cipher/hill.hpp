@@ -57,13 +57,9 @@ namespace Hill {
         i32 a, b;
         i32 pivot = ( key[0][0] * key[1][1] - key[0][1] * key[1][0] ) % 26;
         i32 rev_key[][2] = {
-            { key[0][0], key[0][1] },
-            { key[1][0], key[1][1] }
+            { key[1][1], key[0][1] * -1 },
+            { key[1][0] * -1 , key[0][0] }
         };
-
-        SWAP(&rev_key[0][0], &rev_key[1][1]);
-        rev_key[0][1] *= -1;
-        rev_key[1][0] *= -1;
 
         a = ( (cipher[0] * rev_key[0][0] + cipher[1] * rev_key[0][1]) / pivot ) % 26;
         b = ( (cipher[0] * rev_key[1][0] + cipher[1] * rev_key[1][1]) / pivot ) % 26;
