@@ -16,7 +16,7 @@ namespace Hill {
     }
 
     inline i32 ABS(const i32 x) {
-        return x < 0 ? x * -1 : x;
+        return x < 0 ? -x : x;
     }
 
     inline i32 NORMALIZE(const i32 x, const i32 v) {
@@ -25,10 +25,10 @@ namespace Hill {
 
     
     i32 EUCLEDEAN_GCD(const i32 a, const i32 b) {
-        if (a % b == 0) 
-			return b;
+        if (b == 0) 
+			return a;
         
-		return EUCLEDEAN_GCD(a, a % b);
+		return EUCLEDEAN_GCD(b, a % b);
     }
 
     bool HILL_KEY_AVAILABLE(i32 const key[][2]) {
@@ -59,13 +59,9 @@ namespace Hill {
         i32 a, b;
         i32 pivot = ( key[0][0] * key[1][1] - key[0][1] * key[1][0] ) % 26;
         i32 rev_key[][2] = {
-            { key[0][0], -key[0][1] },
-            { key[1][0], key[1][1] }
+            { key[1][1], -key[0][1] },
+            { -key[1][0], key[0][0] }
         };
-
-        SWAP(&rev_key[0][0], &rev_key[1][1]);
-        rev_key[0][1] *= -1;
-        rev_key[1][0] *= -1;
 
         a = ( (cipher[0] * rev_key[0][0] + cipher[1] * rev_key[0][1]) / pivot ) % 26;
         b = ( (cipher[0] * rev_key[1][0] + cipher[1] * rev_key[1][1]) / pivot ) % 26;
