@@ -29,7 +29,7 @@ namespace RSA {
         return EUCLEDEAN_GCD(b, a % b);
     }
 
-    i64 EUCLEDEAN_TOTIENT(const i64 N) {
+    i64 EULER_TOTIENT(const i64 N) {
         i64 count = 0;
 
         for (u32 i = 1; i < N; ++i) {
@@ -39,7 +39,7 @@ namespace RSA {
         return count;
     }
 
-    i64 EUCLEDEAN_TOTIENT(const i64 p, const i64 q) {
+    i64 EULER_TOTIENT(const i64 p, const i64 q) {
         return (p - 1) * (q - 1);
     }
 
@@ -74,7 +74,7 @@ namespace RSA {
         N = _p * _q;
         e = _e;
 
-        auto totient = EUCLEDEAN_TOTIENT(_p, _q);
+        auto totient = EULER_TOTIENT(_p, _q);
         
         if (_e > totient)
             throw std::exception("public key cannot be larger than fi(N)");
