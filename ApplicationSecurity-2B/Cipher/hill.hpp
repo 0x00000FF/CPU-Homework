@@ -16,7 +16,7 @@ namespace Hill {
     }
 
     inline i32 ABS(const i32 x) {
-        return x < 0 ? x * -1 : x;
+        return x < 0 ? -x : x;
     }
 
     inline i32 MODULO(const i32 x, const i32 v) {
@@ -57,8 +57,8 @@ namespace Hill {
         i32 a, b;
         i32 pivot = ( key[0][0] * key[1][1] - key[0][1] * key[1][0] ) % 26;
         i32 rev_key[][2] = {
-            { key[1][1], key[0][1] * -1 },
-            { key[1][0] * -1 , key[0][0] }
+            { key[1][1], -key[0][1] },
+            { -key[1][0] , key[0][0] }
         };
 
         a = ( (cipher[0] * rev_key[0][0] + cipher[1] * rev_key[0][1]) / pivot ) % 26;
