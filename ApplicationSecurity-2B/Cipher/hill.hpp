@@ -25,7 +25,7 @@ namespace Hill {
 
     
     i32 EUCLEDEAN_GCD(const i32 a, const i32 b) {
-        if (a % b == 0) return a;
+        if (a % b == 0) return b;
         return EUCLEDEAN_GCD(b, a % b);
     }
 
